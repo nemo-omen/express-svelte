@@ -8,4 +8,4 @@ services:
     install:
         extends:
             service: base
-        command: bash -c "npm install -g sails && npm i && cd api && npm i"
+        command: bash -c "npm install"
