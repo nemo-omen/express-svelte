@@ -6,10 +6,10 @@ import cors from 'cors';
 import * as http from 'http';
 import * as path from 'path';
 
-import { approotdir } from './approot.js';
-import { router as apiRouter } from './routes/api.js';
+// basic config imports
+import { staticPort, apiPort, __dirname } from './config.js';
 
-const __dirname = approotdir;
+import { router as apiRouter } from './routes/api.js';
 
 //app for serving frontend
 const app = express();
@@ -34,13 +34,17 @@ app.get('*', (req, res) => {
 //we want that JSON data!
 api.use(bodyParser.json());
 
-//api routes
+//api routes can be found in /routes/api.js
 api.use('/api', apiRouter);
 
+
+//change port for serving static assets
 app.listen(3000, () => {
-    console.log("App listening at http://localhost:3000");
+    console.log(`App listening at http://localhost:${staticPort}`);
 });
 
+
+//change port here for api server
 api.listen(3030, () => {
-    console.log("API listening on http://localhost:3030");
+    console.log(`API listening on http://localhost:${apiPort}`);
 });
