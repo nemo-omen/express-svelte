@@ -1,5 +1,7 @@
-import express from 'express';
-import * as bodyParser from 'body-parser'
+import { default as express } from 'express';
+import { default as logger } from 'morgan';
+import { default as bodyParser } from 'body-parser';
+import { default as cookieParser } from 'cookie-parser';
 import { createOne, getAll, getOne, updateOne, deleteOne } from './services/graphics.service.js';
 
 const app = express();
@@ -16,7 +18,7 @@ app.post('/api/graphics', async (req, res) => {
     const response = await createOne(graphic);
     console.log(response);
     return res.json(response);
-})
+});
 
 //get graphics
 app.get('/api/graphics', async (req, res) => {
