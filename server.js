@@ -2,48 +2,24 @@ import { default as express } from 'express';
 import { default as logger } from 'morgan';
 import { default as bodyParser } from 'body-parser';
 import { default as cookieParser } from 'cookie-parser';
-import { createOne, getAll, getOne, updateOne, deleteOne } from './services/graphics.service.js';
+import * as http from 'http';
+import * as path from 'path';
+import { approotdir } from './helpers/approot.js';
+import { router as apiRouter } from './routes/api.js';
+
+const __dirname = approotdir;
 
 const app = express();
 
-app.use('/', express.static('public'));
+app.use(logger('dev'));
+
+app.use(express.static('public'));
 
 //we want that JSON data!
 app.use(bodyParser.json());
 
-//post graphics
-app.post('/api/graphics', async (req, res) => {
-    const graphic = req.body;
-    console.log(graphic);
-    const response = await createOne(graphic);
-    console.log(response);
-    return res.json(response);
-});
-
-//get graphics
-app.get('/api/graphics', async (req, res) => {
-    const graphics = await getAll();
-    return res.json(graphics);
-});
-
-//get single graphic
-app.get('/api/graphics/:id', async (req, res) => {
-    const graphicId = req.params.id;
-    const graphic = await getOne(graphicId);
-    return res.json(graphic);
-});
-
-app.delete('/api/graphics/:id', async (req, res) => {
-    const graphicId = req.params.id;
-    const graphic = await deleteOne(graphicId);
-    return res.json(graphic);
-});
-
-app.put('/api/graphics/', async (req, res) => {
-    const updateGraphic = req.body;
-    const graphic = await updateOne(updateGraphic);
-    return res.json(graphic);
-});
+//api routes
+app.use('/api', apiRouter);
 
 app.listen(3000, () => {
     console.log("App listening at http://localhost:3000");
