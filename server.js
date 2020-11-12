@@ -11,9 +11,13 @@ import { router as apiRouter } from './routes/api.js';
 
 const __dirname = approotdir;
 
+//app for serving frontend
 const app = express();
+
+//api for , well, API requests
 const api = express();
 
+// TODO find a way to not repeat each of these
 app.use(logger('dev'));
 api.use(logger('dev'));
 api.use(cors());
@@ -22,6 +26,7 @@ app.use(cors());
 
 //use static for app
 app.use(express.static('public'));
+
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 });
