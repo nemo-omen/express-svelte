@@ -12,21 +12,30 @@ import { router as apiRouter } from './routes/api.js';
 const __dirname = approotdir;
 
 const app = express();
+const api = express();
 
 app.use(logger('dev'));
+api.use(logger('dev'));
+api.use(cors());
 app.use(cors());
 
+
+//use static for app
 app.use(express.static('public'));
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 });
 
 //we want that JSON data!
-app.use(bodyParser.json());
+api.use(bodyParser.json());
 
 //api routes
-app.use('/api', apiRouter);
+api.use('/api', apiRouter);
 
 app.listen(3000, () => {
     console.log("App listening at http://localhost:3000");
+});
+
+api.listen(3030, () => {
+    console.log("API listening on http://localhost:3030");
 });

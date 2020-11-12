@@ -1,7 +1,7 @@
 # Please run all npm installs using the included Makefile
 # bash command => `make install`
 version: '3'
-services: 
+services:
     dev:
         image: node:14.14.0-buster
         volumes:
@@ -10,9 +10,10 @@ services:
         command: npm run serve
         ports:
             - 3000:3000 #express
+            - 3030:3030 #express api
             - 5000:5000 #svelte
             - 35729:35729 #livereload
-        depends_on: 
+        depends_on:
             - mongo
     mongo:
         image: mongo

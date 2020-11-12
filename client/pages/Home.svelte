@@ -1,5 +1,23 @@
 <script>
+import { onMount } from 'svelte';
   export let name;
+
+  function normalizeUrl(url) {
+    const location = window.location.toString();
+    let passedUrl = url;
+    let constructedUrl = location.slice(0, -1) + url;
+    return constructedUrl;
+  }
+
+  async function getGraphics() {
+    const response = await fetch('http://localhost:3030/api/graphics');
+    const data = await response.json();
+    console.log(data);
+  }
+
+onMount(() => {
+  getGraphics();
+});
 </script>
 
 <main>
