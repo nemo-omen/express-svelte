@@ -1,6 +1,6 @@
 import mongoist from 'mongoist';
 
-import { dbUrl, dbName, collectionName } from '../config.js';
+import { dbUrl, dbName } from '../config.js';
 
 const db = mongoist(`${dbUrl}/${dbName}`);
 
@@ -8,33 +8,33 @@ const db = mongoist(`${dbUrl}/${dbName}`);
 
 // create a document
 export async function createOne(newDocument) {
-  const document = await db[collectionName].save(newDocument);
+  const document = await db.test.save(newDocument);
   return document;
 }
 
 export async function getAll() {
-  const documents = await db[collectionName].find();
+  const documents = await db.test.find();
   return documents;
 }
 
 export async function getOne(documentId) {
-  const document = await db[collectionName].findOne({ _id: mongoist.ObjectId(documentId)});
+  const document = await db.test.findOne({ _id: mongoist.ObjectId(documentId)});
   console.log("\n\ndb document: ", document);
   return document;
 }
 
 export async function updateOne(updateDocument) {
   const { _id, ...replacementDocument } = updateDocument;
-  const updateResponse = await db[collectionName].replaceOne({_id: mongoist.ObjectId(_id)}, replacementDocument);
+  const updateResponse = await db.test.replaceOne({_id: mongoist.ObjectId(_id)}, replacementDocument);
   return updateResponse;
 }
 
 export async function deleteOne(documentId) {
-  const document = db[collectionName].findOne({ _id: mongoist.ObjectId(documentId) });
+  const document = db.test.findOne({ _id: mongoist.ObjectId(documentId) });
   if (document === null) {
     return { ok: false, status: "Document not found" };
   }
-  const deleteResponse = await db[collectionName].remove({ _id: mongoist.ObjectId(documentId) }, {justOne: true});
+  const deleteResponse = await db.test.remove({ _id: mongoist.ObjectId(documentId) }, {justOne: true});
   if (deleteResponse.deletedCount !== 1) {
     return {ok: false, error: deleteResponse.errmsg}
   }

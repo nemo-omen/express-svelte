@@ -10,36 +10,36 @@ const baseUrl = collectionName;
 //all routes below are yours for the changing!
 
 //post document
-router.post(`/${baseUrl}`, async (req, res) => {
-    console.log(`\n\nPost request received for /${baseUrl}\n\n`);
+router.post(`/test}`, async (req, res) => {
+    console.log(`\n\nPost request received for /test}\n\n`);
     const document = req.body;
     const response = await createOne(document);
     return res.json(response);
 });
 
 //get all documents
-router.get(`/${baseUrl}`, async (req, res) => {
-    console.log(`\n\nGet request received for /${baseUrl}\n\n`);
+router.get(`/test}`, async (req, res) => {
+    console.log(`\n\nGet request received for /test}\n\n`);
     const documents = await getAll();
     return res.json(documents);
 });
 
 //get single document
-router.get(`/${baseUrl}/:id`, async (req, res) => {
+router.get(`/test}/:id`, async (req, res) => {
     const documentId = req.params.id;
     const document = await getOne(documentId);
     return res.json(document);
 });
 
 // delete document
-router.delete(`/${baseUrl}/:id`, async (req, res) => {
+router.delete(`/test}/:id`, async (req, res) => {
     const documentId = req.params.id;
     const document = await deleteOne(documentId);
     return res.json(document);
 });
 
 //update a document
-router.put(`/${baseUrl}`, async (req, res) => {
+router.put(`/test}`, async (req, res) => {
     const updateDocument = req.body;
     const document = await updateOne(updateDocument);
     return res.json(document);
