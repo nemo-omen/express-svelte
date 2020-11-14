@@ -1,6 +1,8 @@
 import { approotdir } from './approot.js';
 import * as dotenv from 'dotenv';
 
+dotenv.config();
+
 // api and static ports
 export const staticPort = process.env.STATIC_PORT || 3000;
 export const apiPort = process.env.API_PORT || 3030;
