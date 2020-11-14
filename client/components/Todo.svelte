@@ -43,6 +43,7 @@
         padding: 0.5em;
         margin: 0 0 1em 0;
         border: 1px solid #dadada;
+        text-align: left;
     }
     .todo>* {
         margin: 0;
@@ -57,6 +58,7 @@
     .todo-control {
         display: flex;
         flex-direction: row;
+        margin-left: 0.5em;
     }
     input[type="checkbox"] {
 		margin: 0;
