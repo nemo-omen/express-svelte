@@ -33,6 +33,7 @@
     "multer-gridfs-storage": "^4.2.0",
     "sirv-cli": "^1.0.0",
     "svelte-feather-icons": "^3.3.0",
-    "tinro": "^0.3.7"
+    "tinro": "^0.3.7",
+    "ws": "^7.4.0"
   }
 }

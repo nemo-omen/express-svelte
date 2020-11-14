@@ -1,5 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
+	import { flip } from 'svelte/animate';
+	import { fade } from 'svelte/transition';
 	import Todo from '../components/Todo.svelte';
 //   import { getData } from '../services/test.store.js';
 
@@ -11,13 +13,7 @@ let task = '';
 async function getData() {
 	const response = await fetch(apiUrl);
 	const data = await response.json();
-	if(data.length === 0) {
-		dummyTodos.forEach((todo) => {
-			saveData(todo);
-		});
-	}
 	todos = [...data];
-	console.log('todos: ', todos);
 }
 
 async function saveData() {
@@ -57,12 +53,12 @@ async function updateData(event) {
 
 async function deleteData(event) {
 	const todoId = event.detail;
-	console.log(todoId);
 	const response = await fetch(`${apiUrl}/${todoId}`, {
 		method: 'DELETE'
 	});
 	if(response.ok) {
-		getData();
+		let filtered = todos.filter((todo) => todo._id !== todoId);
+		todos = [...filtered];
 	}
 }
 
@@ -79,11 +75,13 @@ onMount(() => {
 <h1>Test App</h1>
 <section class="todo-section">
 	<form action="" on:submit|preventDefault={saveData}>
-		<input type="text" class="todo" bind:value={task}>
+		<input type="text" class="todo" bind:value={task} placeholder="Do something!">
 		<button type="submit">save</button>
 	</form>
-	{#each todos as todo, index}
-	<Todo {todo} on:updateTodo={updateData} on:deleteTodo={deleteData} />
+	{#each todos as todo (todo._id)}
+	<div class="todo-item" animate:flip={{duration:300, delay: 100}} transition:fade={{duration: 200}}>
+		<Todo {todo} on:updateTodo={updateData} on:deleteTodo={deleteData} />
+	</div>
 	{/each}
 </section>
 

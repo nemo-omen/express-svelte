@@ -22,7 +22,7 @@
 </script>
 
 <div class="todo">
-    <h3 class:completed>
+    <h3 class:completed id={todo._id}>
         {task}
     </h3>
     <div class="todo-control">

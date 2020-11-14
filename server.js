@@ -1,50 +1,20 @@
-import { default as express } from 'express';
-import { default as logger } from 'morgan';
-import { default as bodyParser } from 'body-parser';
-import { default as cookieParser } from 'cookie-parser';
-import cors from 'cors';
-import * as http from 'http';
-import * as path from 'path';
+import { app as api }from './api/index.js';
+import { app as staticApp } from './static/index.js';
+import { wss } from './sockets/index.js';
+import { socketPort, staticPort, apiPort } from './config.js';
 
-// basic config imports
-import { staticPort, apiPort, __dirname } from './config.js';
+console.log("\n++++++++++++++++++++++++++++++++++++++++++++++++++");
 
-import { router as apiRouter } from './routes/api.js';
-
-//app for serving frontend
-const app = express();
-
-//api for , well, API requests
-const api = express();
-
-// TODO find a way to not repeat each of these
-app.use(logger('dev'));
-api.use(logger('dev'));
-api.use(cors());
-app.use(cors());
-
-
-//use static for app
-app.use(express.static('public'));
-
-app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+//static server => this is for the frontend!
+staticApp.listen(staticPort, () => {
+    console.log(`Static server listening at http://localhost:${staticPort}\n`);
 });
 
-//we want that JSON data!
-api.use(bodyParser.json());
-
-//api routes can be found in /routes/api.js
-api.use('/api', apiRouter);
-
-
-//change port for serving static assets
-app.listen(3000, () => {
-    console.log(`App listening at http://localhost:${staticPort}`);
+//api server => yep, this is the api
+api.listen(apiPort, () => {
+    console.log(`API server listening at http://localhost:${apiPort}\n`);
+    console.log("++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 });
 
+//socket server located at /sockets/index.js
 
-//change port here for api server
-api.listen(3030, () => {
-    console.log(`API listening on http://localhost:${apiPort}`);
-});

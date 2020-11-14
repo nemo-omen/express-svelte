@@ -17,12 +17,14 @@ Easy to use app template for quick builds of express apis with Svelte frontends
 
 1. Clone or degit (`npx degit nemo-omen/express-svelte <my-fancy-project>`) this repo.
 2. `cd` to wherever you put the code
-3. Run the `install` script
+3. Run the `setup` script
+   - creates a volume for mounting `node_modules`
+4. Run the `install` script
 ```bash
 make install
 ```
-4. Run the `dev` script
+5. Run the `dev` script
 ```bash
 make dev
 ```
-5. Have fun!
+6. Have fun!

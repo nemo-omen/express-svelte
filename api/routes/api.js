@@ -1,11 +1,7 @@
 import { default as express } from 'express';
-import { collectionName } from '../config.js';
-//CRUD methods are all defined in the service file
-import { createOne, getAll, getOne, updateOne, deleteOne } from '../services/test.service.js';
+import { createOne, getAll, getOne, updateOne, deleteOne } from '../../services/test.service.js';
 
 export const router = express.Router();
-
-const baseUrl = collectionName;
 
 //all routes below are yours for the changing!
 
