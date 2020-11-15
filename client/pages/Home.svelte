@@ -16,9 +16,19 @@
 	let task = '';
 
 	async function getData() {
-		const response = await fetch(apiUrl);
-		const data = await response.json();
-		todos = [...data];
+		if(!isSocket) {
+			const response = await fetch(apiUrl);
+			const data = await response.json();
+			todos = [...data];
+		}else{
+			socket.send('get');
+			socket.onmessage = (message) => {
+				const response = JSON.parse(message.data);
+				if(response.ok === true && response.method === 'get') {
+					const todos = [...response.data];
+				}
+			};
+		}
 	}
 
 	async function saveData() {
@@ -114,6 +124,7 @@
 		};
 
 		socket.onopen = () => console.log('Websocket connection opened!');
+		socket.onmessage = (message) => console.log(message);
 	}
 
 	function toggleSocket() {
@@ -132,7 +143,6 @@
 		}, 500);
 		startSocket(socketUrl);
 	});
-
 </script>
 
 <h1>Test App</h1>
