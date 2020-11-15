@@ -46,6 +46,14 @@
 				data: newTodo
 			}
 			socket.send(JSON.stringify(message));
+			socket.onmessage = (message) => {
+				const response = JSON.parse(message.data);
+				console.log('Socket message: ', {...message, data: response});
+				if(response.ok === true && response.method === 'post') {
+					const oldTodos = [...todos];
+					todos = [...oldTodos, response.data];
+				}
+			}
 		}
 		task = '';
 	}
@@ -90,8 +98,6 @@
 		};
 
 		socket.onopen = () => console.log('Websocket connection opened!');
-		
-		socket.onmessage = (message) => console.log("Websocket message: ", JSON.parse(message.data));
 	}
 
 	function toggleSocket() {
@@ -110,6 +116,7 @@
 		}, 500);
 		startSocket(socketUrl);
 	});
+
 </script>
 
 <h1>Test App</h1>
