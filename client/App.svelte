@@ -23,6 +23,9 @@ nav a {
 }
 main {
     width: 50%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
     margin: 0 auto;
 	text-align: center;
   }
