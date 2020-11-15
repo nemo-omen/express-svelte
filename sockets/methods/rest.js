@@ -25,17 +25,23 @@ export async function get(wss, ws, message) {
 export async function getOne(wss, ws, message) {
     const messageData = message.data;
     const response = await serviceGetOne(messageData);
-    ws.send(generateRestResponse('getOne', 'ok', response));
+    wss.clients.forEach((client) => {
+        client.send(generateRestResponse('getOne', 'ok', response));
+    });
 }
 
 export async function put(wss, ws, message) {
     const messageData = message.data;
     const response = await serviceUpdate(messageData);
-    ws.send(generateRestResponse('put', 'ok', response));
+    wss.clients.forEach((client) => {
+        client.send(generateRestResponse('put', 'ok', {...response, _id: messageData._id}));
+    });
 }
 
 export async function destroy(wss, ws, message) {
     const messageData = message.data;
     const response = await serviceDelete(message.data);
-    ws.send(generateRestResponse('destroy', 'ok', response));
+    wss.clients.forEach((client) => {
+        client.send(generateRestResponse('destroy', 'ok', response));
+    });
 }

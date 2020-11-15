@@ -1,33 +1,23 @@
 <script>
 	import { onMount } from 'svelte';
 	import { flip } from 'svelte/animate';
-	import { fade } from 'svelte/transition';
+	import { fade, slide } from 'svelte/transition';
 	import Todo from '../components/Todo.svelte';
 	import Switch from '../components/Switch.svelte';
+	import { todos } from '../services/todos.service.js';
 
-	const apiUrl = 'http://localhost:3030/api/test';
-	const socketUrl = 'ws://localhost:3060';
+	import { httpError, httpGet, httpGetOne, httpPost, httpPut, httpDestroy } from '../services/http.service.js';
+	import { socketUrl, socketError, socketGet, socketGetOne, socketPost, socketPut, socketDestroy } from '../services/socket.service.js';
 
-	let socket = new WebSocket(socketUrl);
 
-	let isSocket = false;
-
-	$: todos = [];
 	let task = '';
+	let isSocket = true;
 
 	async function getData() {
-		if(!isSocket) {
-			const response = await fetch(apiUrl);
-			const data = await response.json();
-			todos = [...data];
+		if(isSocket === true) {
+			socketGet();
 		}else{
-			socket.send('get');
-			socket.onmessage = (message) => {
-				const response = JSON.parse(message.data);
-				if(response.ok === true && response.method === 'get') {
-					const todos = [...response.data];
-				}
-			};
+			httpGet();
 		}
 	}
 
@@ -36,102 +26,29 @@
 			task: task,
 			completed: false,
 		}
-		if(!isSocket) {
-			const response = await fetch(apiUrl, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(newTodo)
-			});
-			
-			if(response.ok) {
-				const data = await response.json();
-				const oldTodos = [...todos];
-				todos = [...oldTodos, data];
-			}
+		if(isSocket === true) {
+			socketPost(newTodo);
 		}else{
-			const message = {
-				method: 'post',
-				data: newTodo
-			}
-			socket.send(JSON.stringify(message));
-			socket.onmessage = (message) => {
-				const response = JSON.parse(message.data);
-				console.log('Socket message: ', {...message, data: response});
-				if(response.ok === true && response.method === 'post') {
-					const oldTodos = [...todos];
-					todos = [...oldTodos, response.data];
-				}
-			}
+			httpPost(newTodo);
 		}
 		task = '';
 	}
 
 	async function updateData(event) {
-		const object = event.detail;
-		if(!isSocket) {
-
-			const response = await fetch(apiUrl, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(object)
-			});
-			if(response.ok) {
-				const data = await response.json();
-			}
+		const todo = event.detail;
+		if(isSocket === true) {
+			socketPut(todo);
 		}else{
-			const message = {
-				method: 'put',
-				data: object
-			}
-			socket.send(JSON.stringify(message));
-			socket.onmessage = (message) => {
-				const response = JSON.parse(message.data);
-				console.log('Socket message: ', {...message, data: response});
-				if(response.ok === true && response.method === 'put') {
-					console.log('Successfully updated todo');
-				}
-			};
+			httpPut(todo);
 		}
 	}
 
 	async function deleteData(event) {
 		const todoId = event.detail;
-		const response = await fetch(`${apiUrl}/${todoId}`, {
-			method: 'DELETE'
-		});
-		if(response.ok) {
-			let filtered = todos.filter((todo) => todo._id !== todoId);
-			todos = [...filtered];
-		}
-	}
-
-	function startSocket(url) {
-		socket = null;
-		
-		socket = new WebSocket(url);
-
-		socket.onclose = () => {
-			console.log('Socket connection closed.');
-			if(isSocket === true) {
-				socket = null;
-				console.log('Attempting to reconnect to socket...')
-				setTimeout(() => startSocket(url), 1000)
-			}
-		};
-
-		socket.onopen = () => console.log('Websocket connection opened!');
-		socket.onmessage = (message) => console.log(message);
-	}
-
-	function toggleSocket() {
-		if(socket.readyState !== 1) {
-			startSocket(socketUrl)
+		if(isSocket === true) {
+			socketDestroy(todoId);
 		}else{
-			socket.close();
+			httpDestroy(todoId);
 		}
 	}
 
@@ -141,22 +58,22 @@
 		setTimeout(() => {
 			getData();
 		}, 500);
-		startSocket(socketUrl);
 	});
 </script>
 
 <h1>Test App</h1>
-<div class="protocol-select">
-	<h2 class={isSocket ? 'unselected' : 'selected'}>HTTP</h2>
-		<Switch bind:checked={isSocket} on:toggleSocket={toggleSocket}></Switch>
-	<h2 class={isSocket ? 'selected' : 'unselected'}>WS</h2>
-</div>
 <section class="todo-section">
 	<form action="" on:submit|preventDefault={saveData}>
 		<input type="text" class="todo" bind:value={task} placeholder="Do something!">
 		<button type="submit">save</button>
 	</form>
-	{#each todos as todo (todo._id)}
+	{#if $httpError !== null}
+		<h3 class="error" transition:slide>{$httpError}</h3>
+	{/if}
+	{#if $socketError !== null}
+	<h3 class="error" transition:slide>{$socketError}</h3>
+	{/if}
+	{#each $todos as todo (todo._id)}
 	<div class="todo-item" animate:flip={{duration:300, delay: 100}} transition:fade={{duration: 200}}>
 		<Todo {todo} on:updateTodo={updateData} on:deleteTodo={deleteData} />
 	</div>
@@ -186,6 +103,12 @@
 		align-items: center;
 		width: 340px;
 		margin: 0 0 1em 0;
+	}
+	.error {
+		margin: 0 0 1em 0;
+		padding: 0;
+		color: crimson;
+		font-weight: 400;
 	}
 	.unselected {
 		color: #999;
