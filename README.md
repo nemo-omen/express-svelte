@@ -12,6 +12,7 @@ Easy to use app template for quick builds of express apis with Svelte frontends
 
 [Docker](https://www.docker.com/)
 
+A good deal of the structure of this project is based on [this project template](https://dev.to/garretharp/node-express-and-websockets-ws-boiler-plate-3h4i) by [Garret Harp](https://garretcharp.com/)
 
 ## Getting going
 

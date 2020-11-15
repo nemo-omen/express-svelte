@@ -82,6 +82,7 @@ export function socketDestroy(todoId) {
 }
 
 function handleSocketMessage(ok, method, data) {
+    console.log(ok, method, data);
     if(method === 'get') {
         console.log(method);
         setTodos(data);

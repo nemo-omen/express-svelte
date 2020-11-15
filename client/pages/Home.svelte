@@ -73,7 +73,7 @@
 	{#if $socketError !== null}
 	<h3 class="error" transition:slide>{$socketError}</h3>
 	{/if}
-	{#each $todos as todo (todo._id)}
+	{#each $todos as todo, index (todo._id)}
 	<div class="todo-item" animate:flip={{duration:300, delay: 100}} transition:fade={{duration: 200}}>
 		<Todo {todo} on:updateTodo={updateData} on:deleteTodo={deleteData} />
 	</div>
