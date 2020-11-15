@@ -60,15 +60,31 @@
 
 	async function updateData(event) {
 		const object = event.detail;
-		const response = await fetch(apiUrl, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(object)
-		});
-		if(response.ok) {
-			const data = await response.json();
+		if(!isSocket) {
+
+			const response = await fetch(apiUrl, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(object)
+			});
+			if(response.ok) {
+				const data = await response.json();
+			}
+		}else{
+			const message = {
+				method: 'put',
+				data: object
+			}
+			socket.send(JSON.stringify(message));
+			socket.onmessage = (message) => {
+				const response = JSON.parse(message.data);
+				console.log('Socket message: ', {...message, data: response});
+				if(response.ok === true && response.method === 'put') {
+					console.log('Successfully updated todo');
+				}
+			};
 		}
 	}
 

@@ -25,14 +25,14 @@ export async function getOne(wss, ws, message) {
     ws.send(generateRestResponse('getOne', 'ok', response))
 }
 
-export async function update(wss, ws, message) {
+export async function put(wss, ws, message) {
     const messageData = message.data;
     const response = await serviceUpdate(messageData);
-    ws.send(generateRestResponse('update', 'ok', response));
+    ws.send(generateRestResponse('put', 'ok', response));
 }
 
-export async function deleteOne(wss, ws, message) {
+export async function destroy(wss, ws, message) {
     const messageData = message.data;
     const response = await serviceDelete(message.data);
-    ws.send(generateRestResponse('deleteOne', 'ok', response));
+    ws.send(generateRestResponse('destroy', 'ok', response));
 }
