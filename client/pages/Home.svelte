@@ -75,7 +75,9 @@
 	{/if}
 	{#each $todos as todo, index (todo._id)}
 	<div class="todo-item" animate:flip={{duration:300, delay: 100}} transition:fade={{duration: 200}}>
+		{#key todo}
 		<Todo {todo} on:updateTodo={updateData} on:deleteTodo={deleteData} />
+		{/key}
 	</div>
 	{/each}
 </section>

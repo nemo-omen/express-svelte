@@ -32,7 +32,6 @@
         <input type="checkbox" name="status" id="status" bind:checked={completed} on:change={updateTodo}>
     </div>
 </div>
-
 <style>
     .todo {
         flex-grow: 1;

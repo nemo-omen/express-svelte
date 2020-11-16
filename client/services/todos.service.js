@@ -6,7 +6,7 @@
 
 import { writable } from 'svelte/store';
 
-export const todos = writable([]); 
+export let todos = writable([]); 
 
 export function setTodos(arrayData) {
     todos.set([...arrayData]);
@@ -19,14 +19,12 @@ export function updateTodos(newTodo) {
 }
 
 export function updateTodo(newTodo) {
-    console.log(newTodo);
     todos.update((todoItems) => {
-        let oldTodos = [...todoItems];
-        let todoIndex = oldTodos.findIndex((todo) => todo._id === newTodo._id);
-        oldTodos[todoIndex] = newTodo;
-        // todoItems = todoItems;
-        return oldTodos;
+        let todoIndex = todoItems.findIndex((todo) => todo._id === newTodo._id);
+        todoItems[todoIndex] = {...newTodo};
+        return todoItems;
     });
+    // todos = todos;
 }
 
 export function destroyTodo(todoId) {

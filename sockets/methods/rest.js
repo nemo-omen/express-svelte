@@ -11,7 +11,6 @@ import { generateRestResponse } from '../../helpers/restresponse.js';
 export async function post(wss, ws, message) {
     const messageData = message.data;
     const response = await servicePost(messageData);
-    // ws.send(generateRestResponse('post', 'ok', response));
     wss.clients.forEach((client) => {
         client.send(generateRestResponse('post', 'ok', response));
     });
