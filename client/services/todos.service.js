@@ -21,10 +21,9 @@ export function updateTodos(newTodo) {
 export function updateTodo(newTodo) {
     todos.update((todoItems) => {
         let todoIndex = todoItems.findIndex((todo) => todo._id === newTodo._id);
-        todoItems[todoIndex] = {...newTodo};
+        todoItems[todoIndex] = newTodo;
         return todoItems;
     });
-    // todos = todos;
 }
 
 export function destroyTodo(todoId) {

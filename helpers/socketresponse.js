@@ -1,4 +1,4 @@
-export function generateRestResponse(requestMethod, responseStatus, responseData) {
+export function generateSocketResponse(requestMethod, responseStatus, responseData) {
     let responseMessage = {};
     if(responseStatus === 'ok') {
         responseMessage = {
